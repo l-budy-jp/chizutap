@@ -5,7 +5,13 @@ let selectedPrefKey = null;
 let selectedCityKey = null;
 let selectedTownKey = null;
 let banchi = "";
-let ADDRESS_DATA = {};   // ← CSV から生成される住所データ
+let ADDRESS_DATA = {};
+let displayMode = 0;  // ← 表示モード（0:漢字, 1:ひらがな, 2:カタカナ, 3:ローマ字）
+let currentKanji = "";
+let currentHira = "";
+let currentKana = "";
+let currentRomaji = "";
+
 /* ============================
    職場へ（Googleマップのラベルを参照）
 ============================ */
@@ -14,6 +20,7 @@ function goWork() {
     window.open(url, "_blank");
     popup("Googleマップの職場を開きます");
 }
+
 /* ============================
    自宅へ（Googleマップのラベルを参照）
 ============================ */
@@ -82,29 +89,36 @@ async function loadAddressData() {
 function changeFontSize(size) {
     let fontSize = "16px";
     let padding = "6px 10px";
+    let lineHeight = "1.4";
 
     if (size === "large") {
         fontSize = "22px";
         padding = "12px 16px";
+        lineHeight = "1.6";
     }
     if (size === "medium") {
         fontSize = "18px";
         padding = "8px 12px";
+        lineHeight = "1.5";
     }
     if (size === "small") {
         fontSize = "14px";
         padding = "4px 8px";
+        lineHeight = "1.4";
     }
 
     document.getElementById("header-box").style.fontSize = fontSize;
+    document.getElementById("header-box").style.lineHeight = lineHeight;
 
     document.querySelectorAll("#header-box span, #header-box div").forEach(el => {
         el.style.fontSize = fontSize;
+        el.style.lineHeight = lineHeight;
     });
 
     document.querySelectorAll("button").forEach(btn => {
         btn.style.fontSize = fontSize;
         btn.style.padding = padding;
+        btn.style.lineHeight = lineHeight;
     });
 
     document.getElementById("banchiDisplay").style.fontSize = fontSize;
@@ -113,20 +127,27 @@ function changeFontSize(size) {
 }
 
 /* ============================
+   表示形式の切り替え（リサイクルマーク風）
+============================ */
+function cycleDisplay() {
+    displayMode = (displayMode + 1) % 4;
+    const modes = ["漢字", "ひらがな", "カタカナ", "ローマ字"];
+    const texts = [currentKanji, currentHira, currentKana, currentRomaji];
+    
+    document.getElementById("selKanji").textContent = displayMode === 0 ? "→ " + texts[0] : texts[0];
+    document.getElementById("selHira").textContent = displayMode === 1 ? "→ " + texts[1] : texts[1];
+    document.getElementById("selKana").textContent = displayMode === 2 ? "→ " + texts[2] : texts[2];
+    document.getElementById("selRomaji").textContent = displayMode === 3 ? "→ " + texts[3] : texts[3];
+    
+    popup(modes[displayMode] + " 表示中");
+}
+
+/* ============================
    戻る
 ============================ */
 function goBack() {
     popup("ひとつ前に戻ります");
     history.back();
-}
-
-/* ============================
-   自宅へ
-============================ */
-function goHome() {
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(homeAddress)}`;
-    window.open(url, "_blank");
-    popup("自宅に移動します");
 }
 
 /* ============================
@@ -146,6 +167,7 @@ function resetAll() {
     selectedCityKey = null;
     selectedTownKey = null;
     banchi = "";
+    displayMode = 0;
 
     document.getElementById("prefArea").innerHTML = "";
     document.getElementById("cityArea").innerHTML = "";
@@ -291,40 +313,46 @@ function updateBanchi() {
 }
 
 /* ============================
-   選択情報の表示更新
+   選択情報の表示更新（修正版）
 ============================ */
 function updateSelectedInfo() {
     let kanji = "";
-    let kana = "";
     let hira = "";
+    let kana = "";
     let romaji = "";
 
     if (selectedPrefKey) {
         const p = ADDRESS_DATA[selectedPrefKey];
         kanji += p.kanji;
-        kana += p.kana;
         hira += p.hira;
+        kana += p.kana;
         romaji += wanakana.toRomaji(p.hira);
     }
     if (selectedPrefKey && selectedCityKey) {
         const c = ADDRESS_DATA[selectedPrefKey].cities[selectedCityKey];
         kanji += c.kanji;
-        kana += c.kana;
         hira += c.hira;
+        kana += c.kana;
         romaji += " " + wanakana.toRomaji(c.hira);
     }
     if (selectedPrefKey && selectedCityKey && selectedTownKey) {
         const t = ADDRESS_DATA[selectedPrefKey].cities[selectedCityKey].towns[selectedTownKey];
         kanji += t.kanji;
-        kana += t.kana;
         hira += t.hira;
+        kana += t.kana;
         romaji += " " + wanakana.toRomaji(t.hira);
     }
 
-    document.getElementById("selKanji").textContent = kanji || "未選択";
-    document.getElementById("selKana").textContent = kana || "未選択";
-    document.getElementById("selHira").textContent = hira || "未選択";
-    document.getElementById("selRomaji").textContent = romaji || "未選択";
+    // グローバル変数に保存
+    currentKanji = kanji || "未選択";
+    currentHira = hira || "未選択";
+    currentKana = kana || "未選択";
+    currentRomaji = romaji || "未選択";
+
+    document.getElementById("selKanji").textContent = currentKanji;
+    document.getElementById("selHira").textContent = currentHira;
+    document.getElementById("selKana").textContent = currentKana;
+    document.getElementById("selRomaji").textContent = currentRomaji;
 }
 
 /* ============================
