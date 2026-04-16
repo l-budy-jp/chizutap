@@ -20,7 +20,7 @@ if ("serviceWorker" in navigator) {
 
 <style>
 #header-box {
-    position: fixed;
+    position: sticky;  /* ← fixed から sticky に変更 */
     top: 0;
     left: 0;
     width: 100%;
@@ -28,10 +28,14 @@ if ("serviceWorker" in navigator) {
     color: white;
     padding: 10px;
     z-index: 9999;
+    max-height: 40vh;  /* ← スクロール可能に */
+    overflow-y: auto;  /* ← スクロール可能に */
 }
+
 body {
-    padding-top: 180px;
+    padding-top: 0;  /* ← 0 に変更 */
 }
+
 #popup {
     position: fixed;
     top: 20px;
@@ -44,15 +48,39 @@ body {
     transition: opacity 0.4s;
     z-index: 10000;
 }
+
 .addr-line {
     font-size: 14px;
     margin: 2px 0;
+    word-break: break-word;  /* ← 長い文字を折り返す */
 }
+
 .badge {
     background: rgba(255,255,255,0.3);
     padding: 2px 6px;
     border-radius: 6px;
     margin-right: 4px;
+    display: inline-block;  /* ← バッジのサイズを統一 */
+}
+
+/* ボタンエリアをグリッド表示 */
+.button-area {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.button-area button {
+    width: 100%;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+@media (max-width: 768px) {
+    .button-area {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
 }
 </style>
 
@@ -75,6 +103,7 @@ body {
     <button onclick="changeFontSize('large')">大</button>
     <button onclick="changeFontSize('medium')">中</button>
     <button onclick="changeFontSize('small')">小</button>
+    <button onclick="cycleDisplay()">🔄</button>  <!-- ← 切り替えボタン追加 -->
 
     <button onclick="goBack()">戻る</button>
     <button onclick="resetAll()">リセット</button>
