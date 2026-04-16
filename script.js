@@ -311,7 +311,6 @@ function updateBanchi() {
     document.getElementById("banchiDisplay").textContent = banchi || "（未入力）";
     document.getElementById("selBanchi").textContent = banchi;
 }
-
 /* ============================
    選択情報の表示更新（修正版）
 ============================ */
@@ -344,15 +343,34 @@ function updateSelectedInfo() {
     }
 
     // グローバル変数に保存
-    currentKanji = kanji || "未選択";
+    currentKanji = kanji || "��選択";
     currentHira = hira || "未選択";
     currentKana = kana || "未選択";
     currentRomaji = romaji || "未選択";
 
-    document.getElementById("selKanji").textContent = currentKanji;
-    document.getElementById("selHira").textContent = currentHira;
-    document.getElementById("selKana").textContent = currentKana;
-    document.getElementById("selRomaji").textContent = currentRomaji;
+    // ★★★ ここを修正 ★★★
+    // displayMode に応じて表示を分ける
+    if (displayMode === 0) {
+        document.getElementById("selKanji").textContent = "→ " + currentKanji;
+        document.getElementById("selHira").textContent = currentHira;
+        document.getElementById("selKana").textContent = currentKana;
+        document.getElementById("selRomaji").textContent = currentRomaji;
+    } else if (displayMode === 1) {
+        document.getElementById("selKanji").textContent = currentKanji;
+        document.getElementById("selHira").textContent = "→ " + currentHira;
+        document.getElementById("selKana").textContent = currentKana;
+        document.getElementById("selRomaji").textContent = currentRomaji;
+    } else if (displayMode === 2) {
+        document.getElementById("selKanji").textContent = currentKanji;
+        document.getElementById("selHira").textContent = currentHira;
+        document.getElementById("selKana").textContent = "→ " + currentKana;
+        document.getElementById("selRomaji").textContent = currentRomaji;
+    } else if (displayMode === 3) {
+        document.getElementById("selKanji").textContent = currentKanji;
+        document.getElementById("selHira").textContent = currentHira;
+        document.getElementById("selKana").textContent = currentKana;
+        document.getElementById("selRomaji").textContent = "→ " + currentRomaji;
+    }
 }
 
 /* ============================
