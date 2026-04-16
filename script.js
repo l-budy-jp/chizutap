@@ -312,7 +312,7 @@ function updateBanchi() {
     document.getElementById("selBanchi").textContent = banchi;
 }
 /* ============================
-   選択情報の表示更新（修正版）
+   選択情報の表示更新（修正版）20260416/15:45
 ============================ */
 function updateSelectedInfo() {
     let kanji = "";
