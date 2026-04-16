@@ -1,0 +1,137 @@
+/* ============================
+   基本レイアウト
+============================ */
+body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    background: #f5f5f5;
+    padding-top: 180px; /* ← HTML 内の style と合わせる */
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ============================
+   固定ヘッダー（HTML 内と一致）
+============================ */
+#header-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #1e90ff;
+    color: white;
+    padding: 10px;
+    z-index: 9999;
+}
+
+/* ============================
+   タイトル・見出し
+============================ */
+h1 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.step-title {
+    margin-top: 16px;
+    font-weight: bold;
+}
+
+/* ============================
+   ボタンエリア
+============================ */
+.button-area {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+button {
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    text-align: left;
+    cursor: pointer;
+}
+
+button.primary {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+button.full {
+    width: 100%;
+}
+
+/* ============================
+   選択中の住所表示
+============================ */
+.addr-line {
+    font-size: 14px;
+    margin: 2px 0;
+}
+
+.badge {
+    background: rgba(255,255,255,0.3);
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-right: 4px;
+}
+
+.selected {
+    margin-top: 12px;
+    padding: 8px;
+    background: #f0f8ff;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+/* ============================
+   番地入力キーパッド
+============================ */
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.keypad button {
+    padding: 12px;
+    font-size: 18px;
+}
+
+.banchi-display {
+    margin-top: 8px;
+    font-size: 16px;
+    padding: 6px 8px;
+    background: #f9f9f9;
+    border-radius: 6px;
+}
+
+/* ============================
+   ポップアップ
+============================ */
+#popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 10000;
+}

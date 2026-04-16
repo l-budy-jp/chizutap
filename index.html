@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ボタンで住所選択 → 地図検索</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+<!-- ひらがな・カタカナ変換ライブラリ -->
+<script src="https://unpkg.com/wanakana"></script>
+
+<!-- Service Worker 登録 -->
+<script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+<style>
+#header-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #1e90ff;
+    color: white;
+    padding: 10px;
+    z-index: 9999;
+}
+body {
+    padding-top: 180px;
+}
+#popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 10000;
+}
+.addr-line {
+    font-size: 14px;
+    margin: 2px 0;
+}
+.badge {
+    background: rgba(255,255,255,0.3);
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-right: 4px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- 固定ヘッダー -->
+<div id="header-box">
+    <h2>住所表示エリア</h2>
+
+    <div class="addr-line"><span class="badge">漢字</span><span id="selKanji">未選択</span></div>
+    <div class="addr-line"><span class="badge">ひらがな</span><span id="selHira">未選択</span></div>
+    <div class="addr-line"><span class="badge">カタカナ</span><span id="selKana">未選択</span></div>
+    <div class="addr-line"><span class="badge">ローマ字</span><span id="selRomaji">未選択</span></div>
+    <div class="addr-line"><span class="badge">番地</span><span id="selBanchi"></span></div>
+
+    <br>
+
+    <button onclick="changeFontSize('large')">大</button>
+    <button onclick="changeFontSize('medium')">中</button>
+    <button onclick="changeFontSize('small')">小</button>
+
+    <button onclick="goBack()">戻る</button>
+    <button onclick="resetAll()">リセット</button>
+    <button onclick="goHome()"><img src="home.png" alt="家に帰る"></button>
+    <button onclick="goWork()"><img src="work.png" alt="学校・会社に行く"></button>
+    <button onclick="findPolice()"><img src="help.png" alt="交番へ"></button>
+</div>
+
+<div id="popup"></div>
+
+<div class="container">
+    <h1>ボタンで住所選択 → 地図を開く</h1>
+
+    <div class="step-title">① 都道府県を選択</div>
+    <div class="button-area" id="prefArea"></div>
+
+    <div class="step-title">② 市区町村を選択</div>
+    <div class="button-area" id="cityArea"></div>
+
+    <div class="step-title">③ 町名を選択</div>
+    <div class="button-area" id="townArea"></div>
+
+    <div class="step-title">④ 番地を数字ボタンで入力</div>
+    <div class="banchi-display" id="banchiDisplay">（未入力）</div>
+
+    <div class="keypad">
+        <button onclick="pressNum('1')">1</button>
+        <button onclick="pressNum('2')">2</button>
+        <button onclick="pressNum('3')">3</button>
+        <button onclick="pressNum('4')">4</button>
+        <button onclick="pressNum('5')">5</button>
+        <button onclick="pressNum('6')">6</button>
+        <button onclick="pressNum('7')">7</button>
+        <button onclick="pressNum('8')">8</button>
+        <button onclick="pressNum('9')">9</button>
+        <button onclick="pressNum('-')">-</button>
+        <button onclick="pressNum('0')">0</button>
+        <button onclick="backspace()">←</button>
+    </div>
+
+    <button class="primary full" onclick="openMap()">Googleマップで開く</button>
+</div>
+
+<!-- CSV 版 script.js を読み込む -->
+<script src="script.js"></script>
+
+<!-- script.js 読み込み後に CSV を読み込む -->
+<script>
+loadAddressData();
+</script>
+
+</body>
+</html>
